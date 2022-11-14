@@ -1,0 +1,24 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rescript",
+    "start": "rescript build -w",
+    "clean": "rescript clean",
+    "serve": "vite serve",
+    "server": "vite"
+  },
+  "keywords": [
+    "ReScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "@rescript/react": "^0.10.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rescript": "^10.0.1",
+    "vite": "^3.2.3"
+  }
+}
