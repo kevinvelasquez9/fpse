@@ -13,8 +13,7 @@ module DB : sig
     user_id:int64 -> url:string -> shortened:string -> num_views:int -> _
 
   (* Append a row to the FOLLOWERS table *)
-  val append_follower :
-    follower_id:int64 -> followee_id:int64 -> _
+  val append_follower : follower_id:int64 -> followee_id:int64 -> _
 end
 
 (* Follow a person *)
@@ -33,4 +32,4 @@ val get_full_url : shortened_url:string -> _
 val get_feed : user_id:int64 -> _
 
 (* Create a shortened URL in the database and return the shortened URL *)
-val create_shortened_url: user_id:int64 -> url:string -> string
+val create_shortened_url : user_id:int64 -> url:string -> string

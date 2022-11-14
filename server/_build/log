@@ -1,9 +1,9 @@
-# dune build
+# dune build @fmt
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /Users/kevinvelasquez/fpse/server
 # Auto-detected concurrency: 8
-$ /Users/kevinvelasquez/.opam/4.14.0/bin/ocamlc.opt -config > /var/folders/bv/7yhq7y8n00124sl06tb7915m0000gn/T/dune_d25645_output
+$ /Users/kevinvelasquez/.opam/4.14.0/bin/ocamlc.opt -config > /var/folders/bv/7yhq7y8n00124sl06tb7915m0000gn/T/dune_71eb93_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -115,3 +115,28 @@ $ /Users/kevinvelasquez/.opam/4.14.0/bin/ocamlc.opt -config > /var/folders/bv/7y
 #      ; windows_unicode = false
 #      }
 #  }
+$ (cd _build/default && /Users/kevinvelasquez/.opam/4.14.0/bin/ocamlformat --impl src/app.ml) > _build/default/src/.formatted/app.ml
+$ (cd _build/default && /Users/kevinvelasquez/.opam/4.14.0/bin/ocamlformat --intf src/lib.mli) > _build/default/src/.formatted/lib.mli
+$ /usr/local/bin/git --no-pager diff --no-index --color=always -u _build/default/src/lib.mli _build/default/src/.formatted/lib.mli
+> diff --git a/_build/default/src/lib.mli b/_build/default/src/.formatted/lib.mli
+> index 12af634..ee04cbb 100644
+> --- a/_build/default/src/lib.mli
+> +++ b/_build/default/src/.formatted/lib.mli
+> @@ -13,8 +13,7 @@ module DB : sig
+>      user_id:int64 -> url:string -> shortened:string -> num_views:int -> _
+>  
+>    (* Append a row to the FOLLOWERS table *)
+> -  val append_follower :
+> -    follower_id:int64 -> followee_id:int64 -> _
+> +  val append_follower : follower_id:int64 -> followee_id:int64 -> _
+>  end
+>  
+>  (* Follow a person *)
+> @@ -33,4 +32,4 @@ val get_full_url : shortened_url:string -> _
+>  val get_feed : user_id:int64 -> _
+>  
+>  (* Create a shortened URL in the database and return the shortened URL *)
+> -val create_shortened_url: user_id:int64 -> url:string -> string
+> \ No newline at end of file
+> +val create_shortened_url : user_id:int64 -> url:string -> string
+[1]

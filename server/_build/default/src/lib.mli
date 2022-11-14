@@ -5,6 +5,9 @@ module DB : sig
   (* Inititalize a URLS table and a FOLLOWERS table *)
   val init_tables : unit -> _
 
+  (* Drop the URLS table and the FOLLOWERS table *)
+  val drop_tables : unit -> _
+
   (* Append a row to the URLS table *)
   val append_url :
     user_id:int64 -> url:string -> shortened:string -> num_views:int -> _

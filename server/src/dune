@@ -3,3 +3,8 @@
  (modules lib)
  (modules_without_implementation lib)
  (libraries core postgresql))
+
+(executable
+ (name app)
+ (modules app)
+ (libraries core lib dream))
