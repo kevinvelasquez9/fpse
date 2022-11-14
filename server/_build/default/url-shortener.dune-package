@@ -1,0 +1,4 @@
+(lang dune 3.4)
+(name url-shortener)
+(sections (lib .))
+(files (lib (META dune-package opam)))

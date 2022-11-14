@@ -1,0 +1,5 @@
+lib: [
+  "_build/install/default/lib/url-shortener/META"
+  "_build/install/default/lib/url-shortener/dune-package"
+  "_build/install/default/lib/url-shortener/opam"
+]

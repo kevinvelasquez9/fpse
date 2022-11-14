@@ -1,0 +1,5 @@
+(library
+ (name lib)
+ (modules lib)
+ (modules_without_implementation lib)
+ (libraries core postgresql))
