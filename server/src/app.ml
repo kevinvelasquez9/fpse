@@ -13,10 +13,24 @@ let redirect : Dream.route =
       match Dream.query req "short" with
       | None -> Dream.json ~status:`Bad_Request ~headers ""
       | Some short ->
-          Dream.json ~status:(Dream.int_to_status 200) ~headers "" )
+          (* Dream.json ~status:(Dream.int_to_status 200) ~headers "" ) *)
+          Dream.html short )
 
 (* Get all shortened URLs associated with this user.
    localhost:8080/user?id=10142022 *)
-(* TODO *)
+let get_urls : Dream.route =
+  Dream.get "/user" (fun req ->
+      match Dream.query req "id" with
+      | None -> Dream.json ~status:`Bad_Request ~headers ""
+      | Some id -> Dream.json ~status:(Dream.int_to_status 200) ~headers "" )
 
-let () = Dream.run @@ Dream.router [welcome; redirect]
+(* Follow a user *)
+(* let follow : Dream.route = Dream.post "/follow" *)
+
+(* Unfollow a user *)
+(* let unfollow : Dream.route = Dream.post "/unfollow" *)
+
+let () =
+  (* Dream.run @@ Dream.router [welcome; redirect; get_urls; follow;
+     unfollow] *)
+  Dream.run @@ Dream.router [welcome; redirect; get_urls]
