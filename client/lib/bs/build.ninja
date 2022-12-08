@@ -1,0 +1,39 @@
+rescript = 1
+g_finger := /Users/fernandonova/fpse/client/node_modules/@rescript/react/lib/ocaml/install.stamp
+rule astj
+  command = /Users/fernandonova/fpse/client/node_modules/rescript/darwin/bsc.exe  -bs-v 10.0.1 -bs-jsx 3  -absname -bs-ast -o $out $i
+o src/App.ast : astj ../../src/App.res
+rule deps
+  command = /Users/fernandonova/fpse/client/node_modules/rescript/darwin/bsb_helper.exe -hash f964c83b7d08baeacce846a19f7bf037 -bs-ns App $in
+  restat = 1
+o src/App.d : deps src/App.ast
+rule mij
+  command = /Users/fernandonova/fpse/client/node_modules/rescript/darwin/bsc.exe -bs-ns App -I . -I src/components -I src/pages -I src -I /Users/fernandonova/fpse/client/node_modules/@rescript/react/lib/ocaml   -bs-package-name app -bs-package-output es6:$in_d:.bs.js -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o src/App-App.cmj src/App-App.cmi ../../src/App.bs.js : mij src/App.ast
+o src/Index.ast : astj ../../src/Index.res
+o src/Index.d : deps src/Index.ast
+o src/Index-App.cmj src/Index-App.cmi ../../src/Index.bs.js : mij src/Index.ast
+o src/pages/HomePage.ast : astj ../../src/pages/HomePage.res
+o src/pages/HomePage.d : deps src/pages/HomePage.ast
+o src/pages/HomePage-App.cmj src/pages/HomePage-App.cmi ../../src/pages/HomePage.bs.js : mij src/pages/HomePage.ast
+o src/pages/UserPage.ast : astj ../../src/pages/UserPage.res
+o src/pages/UserPage.d : deps src/pages/UserPage.ast
+o src/pages/UserPage-App.cmj src/pages/UserPage-App.cmi ../../src/pages/UserPage.bs.js : mij src/pages/UserPage.ast
+o src/pages/ErrorPage.ast : astj ../../src/pages/ErrorPage.res
+o src/pages/ErrorPage.d : deps src/pages/ErrorPage.ast
+o src/pages/ErrorPage-App.cmj src/pages/ErrorPage-App.cmi ../../src/pages/ErrorPage.bs.js : mij src/pages/ErrorPage.ast
+o src/pages/SignInPage.ast : astj ../../src/pages/SignInPage.res
+o src/pages/SignInPage.d : deps src/pages/SignInPage.ast
+o src/pages/SignInPage-App.cmj src/pages/SignInPage-App.cmi ../../src/pages/SignInPage.bs.js : mij src/pages/SignInPage.ast
+o src/components/Header.ast : astj ../../src/components/Header.res
+o src/components/Header.d : deps src/components/Header.ast
+o src/components/Header-App.cmj src/components/Header-App.cmi ../../src/components/Header.bs.js : mij src/components/Header.ast
+o src/components/UrlList.ast : astj ../../src/components/UrlList.res
+o src/components/UrlList.d : deps src/components/UrlList.ast
+o src/components/UrlList-App.cmj src/components/UrlList-App.cmi ../../src/components/UrlList.bs.js : mij src/components/UrlList.ast
+rule build_package
+  command = /Users/fernandonova/fpse/client/node_modules/rescript/darwin/bsc.exe -w -49 -color always -no-alias-deps  $i
+  restat = 1
+o App.cmi : build_package App.mlmap
