@@ -1,10 +1,14 @@
 (library
  (name lib)
  (modules lib)
- (modules_without_implementation lib)
- (libraries core postgresql))
+ (libraries core sqlite3))
 
 (executable
  (name app)
  (modules app)
  (libraries core lib dream))
+
+(executable
+  (name test)
+  (modules test)
+  (libraries core lib sqlite3))

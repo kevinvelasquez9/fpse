@@ -1,35 +1,32 @@
-module DB : sig
-  (* A PostgreSQL database connection *)
-  val conn : Postgresql.connection
+(* Gracefully execute a SQL command and return a list of string lists *)
+val execute_sql : string -> string list list option
 
-  (* Inititalize a URLS table and a FOLLOWERS table *)
-  val init_tables : unit -> unit
+(* Execute a non query SQL command *)
+val execute_non_query_sql : string -> unit
 
-  (* Drop the URLS table and the FOLLOWERS table *)
-  val drop_tables : unit -> unit
+(* Inititalize the Sqlite tables *)
+val init_tables : unit -> unit
 
-  (* Append a row to the URLS table *)
-  val append_url :
-    user_id:int64 -> url:string -> shortened:string -> num_views:int -> unit
-
-  (* Append a row to the FOLLOWERS table *)
-  val append_follower : follower_id:int64 -> followee_id:int64 -> unit
-end
+(* Drop the URLS table and the FOLLOWERS table *)
+val drop_tables : unit -> unit
 
 (* Follow a person *)
-val follow : follower_id:int64 -> followee_id:int64 -> unit
+val follow : string -> string -> unit
 
 (* Unfollow a person *)
-val unfollow : follower_id:int64 -> followee_id:int64 -> unit
+val unfollow : string -> string -> unit
 
 (* Get all shortened URLs made by user *)
-val get_all_shortened : user_id:int64 -> string list
+val get_all_shortened : string -> string list list option
 
 (* Get a full URL from a shortened one *)
-val get_full_url : shortened_url:string -> string
+val get_full_url : string -> string option
 
 (* Get a user's feed (URLs made by their following) *)
-val get_feed : user_id:int64 -> string list
+val get_feed : string -> string list
+
+(* Create a random short id *)
+val create_random_short : unit -> string
 
 (* Create a shortened URL in the database and return the shortened URL *)
-val create_shortened_url : user_id:int64 -> url:string -> string
+val create_shortened_url : string -> string -> string option
