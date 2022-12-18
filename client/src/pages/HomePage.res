@@ -1,17 +1,19 @@
 @react.component
-let make = (~list: array<string>) => {
-  let (text, setText) = React.useState(() => "")
+let make = (~user: string) => {
+  let (url, setUrl) = React.useState(() => "")
+  let (list, setList) = React.useState(() => "")
 
-  // To be changed to handleUrlChange function
-  let handleInputChange = event => {
+  let handleUrlChange = event => {
     let value = ReactEvent.Form.currentTarget(event)["value"]
 
-    setText(_ => value)
+    setUrl(_ => value)
   }
+
+  //function for getting list of urls from username
 
   <div className="bg-rose-400 h-screen flex flex-col items-center justify-around p-40">
       <div className="bg-rose-400 flex flex-row">
-        <input type_="text" value={text} onChange={handleInputChange}/>
+        <input type_="text" value={text} onChange={handleUrlChange}/>
         <button className="bg-gray-400">
           {React.string("Create Tiny URL")}
         </button>

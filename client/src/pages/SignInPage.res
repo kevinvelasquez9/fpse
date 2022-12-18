@@ -2,19 +2,28 @@
 
 @react.component
 let make = () => {
-  let (text, setText) = React.useState(() => "")
+  let (username, setUsername) = React.useState(() => "")
+  let (password, setPassword) = React.useState(() => "")
 
-  //To Be Changed with handleUsernameChange and handlePasswordChange functions
-  let handleInputChange = event => {
+  let handleUsernameChange = event => {
     let value = ReactEvent.Form.currentTarget(event)["value"]
+    setUsername(_ => value)
+  }
 
-    setText(_ => value)
+  let handlePasswordChange = event => {
+    let value = ReactEvent.Form.currentTarget(event)["value"]
+    setPassword(_ => value)
+  }
+
+  let signInUser = event => {
+    // Update to actually sign in user
+    RescriptReactRouter.push("/home")
   }
   
   <div className="bg-frame bg-rose-400 h-screen flex flex-col items-center justify-evenly p-40">
-    <input type_="text" value={text} onChange={handleInputChange} />
-    <input type_="text" value={text} onChange={handleInputChange} />
-    <button onClick={event => RescriptReactRouter.push("/home")}>
+    <input type_="text" value={username} onChange={handleUsernameChange} />
+    <input type_="text" value={password} onChange={handlePasswordChange} />
+    <button onClick={event => signInUser}>
       {React.string("Sign In")}
     </button>
   </div>

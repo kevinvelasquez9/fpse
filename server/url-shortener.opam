@@ -6,7 +6,7 @@ maintainer: ["kvelasq1@jhu.edu" "fnova1@jhu.edu"]
 authors: ["Kevin Velasquez" "Fernando Nova"]
 depends: [
   "dune" {>= "2.9" & >= "2.9"}
-  "core" {>= ".0.14.1"}
+  "core" {>= "0.14.1"}
   "sqlite3" {>= "5.1.0"}
   "dream" {>= "1.0.0~alpha2"}
   "odoc" {with-doc}
