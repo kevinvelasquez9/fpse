@@ -19,7 +19,6 @@ let redirect : Dream.route =
       | Some short ->
           let full_url = Lib.get_full_url short in
           Dream.json ~headers full_url )
-(* Dream.json ~status:(Dream.int_to_status 200) ~headers "" ) *)
 
 (* Get all shortened URLs associated with this user.
    localhost:8080/user?name=user1 *)
@@ -83,6 +82,15 @@ let unfollow : Dream.route =
       let valid = Lib.unfollow follower followee in
       Dream.json ~headers valid )
 
+(* Get a user's feed with user object localhost:8080/feed?name=user1 *)
+let get_feed : Dream.route =
+  Dream.get "/feed" (fun req ->
+      match Dream.query req "name" with
+      | None -> Dream.json ~status:`Bad_Request ~headers ""
+      | Some name ->
+          let feed = Lib.get_feed name in
+          Dream.json ~headers feed )
+
 let () =
   Dream.run
   @@ Dream.router
@@ -92,4 +100,5 @@ let () =
        ; create_user
        ; validate_user
        ; follow
-       ; unfollow ]
+       ; unfollow
+       ; get_feed ]

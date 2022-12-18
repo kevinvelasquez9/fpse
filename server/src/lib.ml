@@ -3,13 +3,15 @@ open Sqlite3
 
 [@@@warning "-27"]
 
-let unimplemented _ = failwith "todo"
-
 type str_response = {data: string; code: int} [@@deriving yojson]
 
-type list_respone = {data: string list; code: int} [@@deriving yojson]
+type list_response = {data: string list; code: int} [@@deriving yojson]
 
 type bool_response = {data: bool; code: int} [@@deriving yojson]
+
+type url = {user: string; short: string} [@@deriving yojson]
+
+type feed_response = {data: url list; code: int} [@@deriving yojson]
 
 let db = db_open "database.db"
 
@@ -87,7 +89,7 @@ let unfollow (follower : string) (followee : string) : string =
 
 let get_all_shortened (user : string) : string =
   let empty_response =
-    Yojson.Safe.to_string (yojson_of_list_respone {data= []; code= 200})
+    Yojson.Safe.to_string (yojson_of_list_response {data= []; code= 200})
   in
   let sql =
     Printf.sprintf "SELECT * FROM urls WHERE username = '%s';" user
@@ -103,7 +105,7 @@ let get_all_shortened (user : string) : string =
       in
       let json =
         Yojson.Safe.to_string
-          (yojson_of_list_respone {data= urls; code= 200})
+          (yojson_of_list_response {data= urls; code= 200})
       in
       json
 
@@ -127,7 +129,28 @@ let get_full_url (shortened : string) : string =
         in
         json
 
-let get_feed (user : string) : string list = unimplemented ()
+let get_feed (user : string) : string =
+  let sql =
+    Printf.sprintf
+      "SELECT username, shortened FROM urls INNER JOIN following ON \
+       urls.username = following.followee WHERE follower = '%s';"
+      user
+  in
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string (yojson_of_feed_response {data= []; code= 200})
+  | Some rows ->
+      let feed =
+        List.fold rows ~init:[] ~f:(fun (acc : url list) row ->
+            match row with
+            | [username; short] -> {user= username; short} :: acc
+            | _ -> acc )
+      in
+      let json =
+        Yojson.Safe.to_string
+          (yojson_of_feed_response {data= feed; code= 200})
+      in
+      json
 
 let create_random_short () : string = "foo"
 
