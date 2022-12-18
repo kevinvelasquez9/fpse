@@ -3,13 +3,15 @@ open Sqlite3
 
 [@@@warning "-27"]
 
-let unimplemented _ = failwith "todo"
-
 type str_response = {data: string; code: int} [@@deriving yojson]
 
-type list_respone = {data: string list; code: int} [@@deriving yojson]
+type list_response = {data: string list; code: int} [@@deriving yojson]
 
 type bool_response = {data: bool; code: int} [@@deriving yojson]
+
+type url = {user: string; short: string} [@@deriving yojson]
+
+type feed_response = {data: url list; code: int} [@@deriving yojson]
 
 let db = db_open "database.db"
 
@@ -62,20 +64,32 @@ let drop_tables () : unit =
   execute_non_query_sql "DROP TABLE IF EXISTS urls;" ;
   execute_non_query_sql "DROP TABLE IF EXISTS following;"
 
-let follow (follower : string) (followee : string) : unit =
+let follow (follower : string) (followee : string) : string =
   let sql =
     Printf.sprintf
       "INSERT INTO following (follower, followee) VALUES ('%s', '%s');"
       follower followee
   in
-  execute_non_query_sql sql
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string
+        (yojson_of_bool_response {data= false; code= 500})
+  | Some _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
-let unfollow (follower : string) (followee : string) : unit =
-  unimplemented ()
+let unfollow (follower : string) (followee : string) : string =
+  let sql =
+    Printf.sprintf
+      "DELETE FROM following WHERE follower = '%s' AND followee = '%s';"
+      follower followee
+  in
+  match execute_sql sql with
+  | _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
 let get_all_shortened (user : string) : string =
   let empty_response =
-    Yojson.Safe.to_string (yojson_of_list_respone {data= []; code= 200})
+    Yojson.Safe.to_string (yojson_of_list_response {data= []; code= 200})
   in
   let sql =
     Printf.sprintf "SELECT * FROM urls WHERE username = '%s';" user
@@ -91,7 +105,7 @@ let get_all_shortened (user : string) : string =
       in
       let json =
         Yojson.Safe.to_string
-          (yojson_of_list_respone {data= urls; code= 200})
+          (yojson_of_list_response {data= urls; code= 200})
       in
       json
 
@@ -115,20 +129,45 @@ let get_full_url (shortened : string) : string =
         in
         json
 
-let get_feed (user : string) : string list = unimplemented ()
+let get_feed (user : string) : string =
+  let sql =
+    Printf.sprintf
+      "SELECT username, shortened FROM urls INNER JOIN following ON \
+       urls.username = following.followee WHERE follower = '%s';"
+      user
+  in
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string (yojson_of_feed_response {data= []; code= 200})
+  | Some rows ->
+      let feed =
+        List.fold rows ~init:[] ~f:(fun (acc : url list) row ->
+            match row with
+            | [username; short] -> {user= username; short} :: acc
+            | _ -> acc )
+      in
+      let json =
+        Yojson.Safe.to_string
+          (yojson_of_feed_response {data= feed; code= 200})
+      in
+      json
 
 let create_random_short () : string = "foo"
 
-let create_shortened_url (user : string) (full_url : string) : string option
-    =
-  let shortened = create_random_short () in
+let create_shortened_url (user : string) (full : string) (short : string) :
+    string =
   let sql =
     Printf.sprintf
       "INSERT INTO urls (username, full_url, shortened) VALUES ('%s', '%s', \
        '%s');"
-      user full_url shortened
+      user full short
   in
-  match execute_sql sql with None -> None | Some _ -> Some shortened
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string
+        (yojson_of_bool_response {data= false; code= 500})
+  | Some _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
 let create_user (username : string) (password : string) : string =
   let sql =

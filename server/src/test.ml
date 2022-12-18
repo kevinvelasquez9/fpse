@@ -11,7 +11,6 @@ let () =
   L.drop_tables () ;
   L.init_tables () ;
   L.execute_non_query_sql create_user1 ;
-  L.execute_non_query_sql create_user2 ;
-  match L.create_shortened_url "user1" "google.com" with
-  | None -> print_endline "none"
-  | Some s -> print_endline s
+  L.execute_non_query_sql create_user2
+(* match L.create_shortened_url "user1" "google.com" with | None ->
+   print_endline "none" | Some s -> print_endline s *)

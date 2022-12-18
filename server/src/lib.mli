@@ -11,10 +11,10 @@ val init_tables : unit -> unit
 val drop_tables : unit -> unit
 
 (* Follow a person *)
-val follow : string -> string -> unit
+val follow : string -> string -> string
 
 (* Unfollow a person *)
-val unfollow : string -> string -> unit
+val unfollow : string -> string -> string
 
 (* Get all shortened URLs made by user *)
 val get_all_shortened : string -> string
@@ -23,13 +23,13 @@ val get_all_shortened : string -> string
 val get_full_url : string -> string
 
 (* Get a user's feed (URLs made by their following) *)
-val get_feed : string -> string list
+val get_feed : string -> string
 
 (* Create a random short id *)
 val create_random_short : unit -> string
 
-(* Create a shortened URL in the database and return the shortened URL *)
-val create_shortened_url : string -> string -> string option
+(* Create a shortened URL in the database *)
+val create_shortened_url : string -> string -> string -> string
 
 (* Create a user, return false if username is taken *)
 val create_user : string -> string -> string
