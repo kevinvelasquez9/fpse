@@ -3,9 +3,9 @@ open Belt
 @react.component
 let make = (~list: array<string>) => {
   let urls = list -> Array.map(url => {
-    <li> {React.string(url)} </li>
+    <button className="bg-gray-400" onClick={event => RescriptReactRouter.push(`/redirect/${url}`)}> {React.string(url)}</button>
   })
-  <button onClick={event => RescriptReactRouter.push("/whatever")}>
+  <div>
     {React.array(urls)}
-  </button>
+  </div>
 }
