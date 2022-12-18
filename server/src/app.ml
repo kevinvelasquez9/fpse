@@ -14,8 +14,9 @@ let redirect : Dream.route =
       | None -> Dream.json ~status:`Bad_Request ~headers ""
       | Some short -> (
         match Lib.get_full_url short with
-        | None -> Dream.html "Does not exist"
-        | Some full_url -> Dream.html full_url ) )
+        | None -> Dream.json ~status:`Bad_Request ~headers ""
+        | Some full_url ->
+            Dream.json ~status:(Dream.int_to_status 200) ~headers full_url ) )
 (* Dream.json ~status:(Dream.int_to_status 200) ~headers "" ) *)
 
 (* Get all shortened URLs associated with this user.
