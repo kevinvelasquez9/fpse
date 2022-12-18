@@ -17,7 +17,7 @@ val follow : string -> string -> unit
 val unfollow : string -> string -> unit
 
 (* Get all shortened URLs made by user *)
-val get_all_shortened : string -> string list list option
+val get_all_shortened : string -> string
 
 (* Get a full URL from a shortened one *)
 val get_full_url : string -> string

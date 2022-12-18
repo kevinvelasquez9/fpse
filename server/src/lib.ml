@@ -7,6 +7,8 @@ let unimplemented _ = failwith "todo"
 
 type str_response = {data: string; code: int} [@@deriving yojson]
 
+type list_respone = {data: string list; code: int} [@@deriving yojson]
+
 let db = db_open "database.db"
 
 let execute_sql (sql : string) : string list list option =
@@ -69,11 +71,27 @@ let follow (follower : string) (followee : string) : unit =
 let unfollow (follower : string) (followee : string) : unit =
   unimplemented ()
 
-let get_all_shortened (user : string) : string list list option =
+let get_all_shortened (user : string) : string =
+  let empty_response =
+    Yojson.Safe.to_string (yojson_of_list_respone {data= []; code= 200})
+  in
   let sql =
     Printf.sprintf "SELECT * FROM urls WHERE username = '%s';" user
   in
-  execute_sql sql
+  match execute_sql sql with
+  | None -> empty_response
+  | Some rows ->
+      let urls =
+        List.fold rows ~init:[] ~f:(fun acc row ->
+            match row with
+            | [id; username; full_url; shortened] -> shortened :: acc
+            | _ -> acc )
+      in
+      let json =
+        Yojson.Safe.to_string
+          (yojson_of_list_respone {data= urls; code= 200})
+      in
+      json
 
 let get_full_url (shortened : string) : string =
   let bad_response =
