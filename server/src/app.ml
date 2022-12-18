@@ -12,11 +12,9 @@ let redirect : Dream.route =
   Dream.get "/redirect" (fun req ->
       match Dream.query req "short" with
       | None -> Dream.json ~status:`Bad_Request ~headers ""
-      | Some short -> (
-        match Lib.get_full_url short with
-        | None -> Dream.json ~status:`Bad_Request ~headers ""
-        | Some full_url ->
-            Dream.json ~status:(Dream.int_to_status 200) ~headers full_url ) )
+      | Some short ->
+          let full_url = Lib.get_full_url short in
+          Dream.json ~headers full_url )
 (* Dream.json ~status:(Dream.int_to_status 200) ~headers "" ) *)
 
 (* Get all shortened URLs associated with this user.

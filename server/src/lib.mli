@@ -20,7 +20,7 @@ val unfollow : string -> string -> unit
 val get_all_shortened : string -> string list list option
 
 (* Get a full URL from a shortened one *)
-val get_full_url : string -> string option
+val get_full_url : string -> string
 
 (* Get a user's feed (URLs made by their following) *)
 val get_feed : string -> string list

@@ -75,22 +75,25 @@ let get_all_shortened (user : string) : string list list option =
   in
   execute_sql sql
 
-let get_full_url (shortened : string) : string option =
+let get_full_url (shortened : string) : string =
+  let bad_response =
+    Yojson.Safe.to_string (yojson_of_str_response {data= ""; code= 500})
+  in
   let sql =
     Printf.sprintf "SELECT full_url FROM urls WHERE shortened = '%s';"
       shortened
   in
   match execute_sql sql with
-  | None -> None
+  | None -> bad_response
   | Some rows ->
-      if List.length rows = 0 then None
+      if List.length rows = 0 then bad_response
       else
         let full = List.hd_exn (List.hd_exn rows) in
         let json =
           Yojson.Safe.to_string
             (yojson_of_str_response {data= full; code= 200})
         in
-        Some json
+        json
 
 let get_feed (user : string) : string list = unimplemented ()
 
