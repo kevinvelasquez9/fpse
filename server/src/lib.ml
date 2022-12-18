@@ -142,3 +142,20 @@ let create_user (username : string) (password : string) : string =
         (yojson_of_bool_response {data= false; code= 500})
   | Some _ ->
       Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
+
+let validate_user (username : string) (password : string) : string =
+  let not_valid_response =
+    Yojson.Safe.to_string (yojson_of_bool_response {data= false; code= 500})
+  in
+  let sql =
+    Printf.sprintf
+      "SELECT * FROM users WHERE username = '%s' AND password = '%s'"
+      username password
+  in
+  match execute_sql sql with
+  | None -> not_valid_response
+  | Some rows ->
+      if List.length rows = 0 then not_valid_response
+      else
+        Yojson.Safe.to_string
+          (yojson_of_bool_response {data= true; code= 200})
