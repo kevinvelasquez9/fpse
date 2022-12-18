@@ -8,7 +8,9 @@
 (executable
  (name app)
  (modules app)
- (libraries core lib dream))
+ (libraries core lib dream)
+ (preprocess
+   (pps lwt_ppx ppx_yojson_conv)))
 
 (executable
   (name test)

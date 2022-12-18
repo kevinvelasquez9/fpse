@@ -1,5 +1,7 @@
 [@@@warning "-27"]
 
+type user_object = {username: string; password: string} [@@deriving yojson]
+
 let headers = [("Access-Control-Allow-Origin", "*")]
 
 (* Welcome page. localhost:8080/ *)
@@ -27,13 +29,26 @@ let get_urls : Dream.route =
           let urls = Lib.get_all_shortened name in
           Dream.json ~headers urls )
 
+(* Create a user by posting an object with username and password
+   localhost:8080/user/create *)
+let create_user : Dream.route =
+  Dream.post "/user/create" (fun req ->
+      let%lwt body = Dream.body req in
+      let user_object =
+        body |> Yojson.Safe.from_string |> user_object_of_yojson
+      in
+      let username = user_object.username in
+      let password = user_object.password in
+      let valid = Lib.create_user username password in
+      Dream.json ~headers valid )
+
 (* Follow a user *)
 (* let follow : Dream.route = Dream.post "/follow" *)
 
 (* Unfollow a user *)
 (* let unfollow : Dream.route = Dream.post "/unfollow" *)
 
-let () = Dream.run @@ Dream.router [welcome; redirect; get_urls]
+let () = Dream.run @@ Dream.router [welcome; redirect; get_urls; create_user]
 (* Dream.run @@ Dream.router [welcome; redirect; get_urls; follow;
    unfollow] *)
 (* Dream.run @@ Dream.router [welcome; redirect; get_urls] *)

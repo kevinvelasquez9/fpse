@@ -9,6 +9,8 @@ type str_response = {data: string; code: int} [@@deriving yojson]
 
 type list_respone = {data: string list; code: int} [@@deriving yojson]
 
+type bool_response = {data: bool; code: int} [@@deriving yojson]
+
 let db = db_open "database.db"
 
 let execute_sql (sql : string) : string list list option =
@@ -126,4 +128,17 @@ let create_shortened_url (user : string) (full_url : string) : string option
        '%s');"
       user full_url shortened
   in
-  match execute_sql sql with None -> None | Some rows -> Some shortened
+  match execute_sql sql with None -> None | Some _ -> Some shortened
+
+let create_user (username : string) (password : string) : string =
+  let sql =
+    Printf.sprintf
+      "INSERT INTO users (username, password) VALUES ('%s', '%s');" username
+      password
+  in
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string
+        (yojson_of_bool_response {data= false; code= 500})
+  | Some _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})

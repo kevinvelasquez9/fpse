@@ -30,3 +30,6 @@ val create_random_short : unit -> string
 
 (* Create a shortened URL in the database and return the shortened URL *)
 val create_shortened_url : string -> string -> string option
+
+(* Create a user, return false if username is taken *)
+val create_user : string -> string -> string
