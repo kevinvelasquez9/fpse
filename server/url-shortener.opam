@@ -9,6 +9,8 @@ depends: [
   "core" {>= "0.14.1"}
   "sqlite3" {>= "5.1.0"}
   "dream" {>= "1.0.0~alpha2"}
+  "yojson" {>= "1.7.0"}
+  "ppx_yojson_conv" {>= "0.15.1"}
   "odoc" {with-doc}
 ]
 build: [

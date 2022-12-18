@@ -1,7 +1,9 @@
 (library
  (name lib)
  (modules lib)
- (libraries core sqlite3))
+ (libraries core sqlite3 yojson)
+ (preprocess
+   (pps lwt_ppx ppx_yojson_conv)))
 
 (executable
  (name app)

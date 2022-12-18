@@ -16,7 +16,8 @@ let redirect : Dream.route =
         match Lib.get_full_url short with
         | None -> Dream.json ~status:`Bad_Request ~headers ""
         | Some full_url ->
-            Dream.json ~status:(Dream.int_to_status 200) ~headers full_url ) )
+            let json = `String full_url |> Yojson.Safe.to_string in
+            Dream.json ~status:(Dream.int_to_status 200) ~headers json ) )
 (* Dream.json ~status:(Dream.int_to_status 200) ~headers "" ) *)
 
 (* Get all shortened URLs associated with this user.

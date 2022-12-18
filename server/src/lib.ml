@@ -5,6 +5,8 @@ open Sqlite3
 
 let unimplemented _ = failwith "todo"
 
+type 'data response = {data: 'data; code: int} [@@deriving yojson]
+
 let db = db_open "database.db"
 
 let execute_sql (sql : string) : string list list option =
@@ -82,7 +84,9 @@ let get_full_url (shortened : string) : string option =
   | None -> None
   | Some rows ->
       if List.length rows = 0 then None
-      else Some (List.hd_exn (List.hd_exn rows))
+      else
+        let full = List.hd_exn (List.hd_exn rows) in
+        Some full
 
 let get_feed (user : string) : string list = unimplemented ()
 
