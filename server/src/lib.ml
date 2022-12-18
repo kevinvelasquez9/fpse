@@ -16,6 +16,7 @@ type feed_response = {data: url list; code: int} [@@deriving yojson]
 let db = db_open "database.db"
 
 let execute_sql (sql : string) : string list list option =
+  let sql = "PRAGMA foreign_keys = ON; " ^ sql in
   let rows = ref [] in
   let cb (row : string array) =
     let row = row |> Array.to_list in
@@ -37,10 +38,9 @@ let create_users_table () : unit =
 
 let create_urls_table () : unit =
   let sql =
-    "CREATE TABLE IF NOT EXISTS urls ( id INTEGER NOT NULL, username TEXT \
-     NOT NULL, full_url TEXT NOT NULL, shortened TEXT NOT NULL, PRIMARY KEY \
-     (id), FOREIGN KEY (username) REFERENCES users (username) ON DELETE \
-     CASCADE );"
+    "CREATE TABLE IF NOT EXISTS urls ( short TEXT NOT NULL, full TEXT NOT \
+     NULL, username TEXT NOT NULL, PRIMARY KEY (short), FOREIGN KEY \
+     (username) REFERENCES users (username) ON DELETE CASCADE );"
   in
   execute_non_query_sql sql
 
@@ -54,10 +54,7 @@ let create_following_table () : unit =
   execute_non_query_sql sql
 
 let init_tables () : unit =
-  execute_non_query_sql "PRAGMA foreign_keys = ON;" ;
-  create_users_table () ;
-  create_urls_table () ;
-  create_following_table ()
+  create_users_table () ; create_urls_table () ; create_following_table ()
 
 let drop_tables () : unit =
   execute_non_query_sql "DROP TABLE IF EXISTS users;" ;
@@ -92,16 +89,14 @@ let get_all_shortened (user : string) : string =
     Yojson.Safe.to_string (yojson_of_list_response {data= []; code= 200})
   in
   let sql =
-    Printf.sprintf "SELECT * FROM urls WHERE username = '%s';" user
+    Printf.sprintf "SELECT short FROM urls WHERE username = '%s';" user
   in
   match execute_sql sql with
   | None -> empty_response
   | Some rows ->
       let urls =
         List.fold rows ~init:[] ~f:(fun acc row ->
-            match row with
-            | [id; username; full_url; shortened] -> shortened :: acc
-            | _ -> acc )
+            match row with [short] -> short :: acc | _ -> acc )
       in
       let json =
         Yojson.Safe.to_string
@@ -158,9 +153,8 @@ let create_shortened_url (user : string) (full : string) (short : string) :
     string =
   let sql =
     Printf.sprintf
-      "INSERT INTO urls (username, full_url, shortened) VALUES ('%s', '%s', \
-       '%s');"
-      user full short
+      "INSERT INTO urls (short, full, username) VALUES ('%s', '%s', '%s');"
+      short full user
   in
   match execute_sql sql with
   | None ->
