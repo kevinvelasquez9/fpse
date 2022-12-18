@@ -5,7 +5,7 @@ open Sqlite3
 
 let unimplemented _ = failwith "todo"
 
-type 'data response = {data: 'data; code: int} [@@deriving yojson]
+type str_response = {data: string; code: int} [@@deriving yojson]
 
 let db = db_open "database.db"
 
@@ -86,7 +86,11 @@ let get_full_url (shortened : string) : string option =
       if List.length rows = 0 then None
       else
         let full = List.hd_exn (List.hd_exn rows) in
-        Some full
+        let json =
+          Yojson.Safe.to_string
+            (yojson_of_str_response {data= full; code= 200})
+        in
+        Some json
 
 let get_feed (user : string) : string list = unimplemented ()
 
