@@ -62,16 +62,28 @@ let drop_tables () : unit =
   execute_non_query_sql "DROP TABLE IF EXISTS urls;" ;
   execute_non_query_sql "DROP TABLE IF EXISTS following;"
 
-let follow (follower : string) (followee : string) : unit =
+let follow (follower : string) (followee : string) : string =
   let sql =
     Printf.sprintf
       "INSERT INTO following (follower, followee) VALUES ('%s', '%s');"
       follower followee
   in
-  execute_non_query_sql sql
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string
+        (yojson_of_bool_response {data= false; code= 500})
+  | Some _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
-let unfollow (follower : string) (followee : string) : unit =
-  unimplemented ()
+let unfollow (follower : string) (followee : string) : string =
+  let sql =
+    Printf.sprintf
+      "DELETE FROM following WHERE follower = '%s' AND followee = '%s';"
+      follower followee
+  in
+  match execute_sql sql with
+  | _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
 let get_all_shortened (user : string) : string =
   let empty_response =

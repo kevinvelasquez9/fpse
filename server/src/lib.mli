@@ -11,10 +11,10 @@ val init_tables : unit -> unit
 val drop_tables : unit -> unit
 
 (* Follow a person *)
-val follow : string -> string -> unit
+val follow : string -> string -> string
 
 (* Unfollow a person *)
-val unfollow : string -> string -> unit
+val unfollow : string -> string -> string
 
 (* Get all shortened URLs made by user *)
 val get_all_shortened : string -> string

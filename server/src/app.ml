@@ -2,6 +2,8 @@
 
 type user_object = {username: string; password: string} [@@deriving yojson]
 
+type follow_object = {follower: string; followee: string} [@@deriving yojson]
+
 let headers = [("Access-Control-Allow-Origin", "*")]
 
 (* Welcome page. localhost:8080/ *)
@@ -55,17 +57,39 @@ let validate_user : Dream.route =
       let valid = Lib.validate_user username password in
       Dream.json ~headers valid )
 
-(* Follow a user *)
-(* let follow : Dream.route = Dream.post "/follow" *)
+(* Follow a user by posting an object with follower and followee
+   localhost:8080/follow *)
+let follow : Dream.route =
+  Dream.post "/follow" (fun req ->
+      let%lwt body = Dream.body req in
+      let follow_object =
+        body |> Yojson.Safe.from_string |> follow_object_of_yojson
+      in
+      let follower = follow_object.follower in
+      let followee = follow_object.followee in
+      let valid = Lib.follow follower followee in
+      Dream.json ~headers valid )
 
-(* Unfollow a user *)
-(* let unfollow : Dream.route = Dream.post "/unfollow" *)
+(* Unfollow a user by posting an object with follower and followee
+   localhost:8080/unfollow *)
+let unfollow : Dream.route =
+  Dream.post "/unfollow" (fun req ->
+      let%lwt body = Dream.body req in
+      let follow_object =
+        body |> Yojson.Safe.from_string |> follow_object_of_yojson
+      in
+      let follower = follow_object.follower in
+      let followee = follow_object.followee in
+      let valid = Lib.unfollow follower followee in
+      Dream.json ~headers valid )
 
 let () =
   Dream.run
-  @@ Dream.router [welcome; redirect; get_urls; create_user; validate_user]
-(* Dream.run @@ Dream.router [welcome; redirect; get_urls; follow;
-   unfollow] *)
-(* Dream.run @@ Dream.router [welcome; redirect; get_urls] *)
-
-(* let () = print_endline "OK" *)
+  @@ Dream.router
+       [ welcome
+       ; redirect
+       ; get_urls
+       ; create_user
+       ; validate_user
+       ; follow
+       ; unfollow ]
