@@ -154,16 +154,20 @@ let get_feed (user : string) : string =
 
 let create_random_short () : string = "foo"
 
-let create_shortened_url (user : string) (full_url : string) : string option
-    =
-  let shortened = create_random_short () in
+let create_shortened_url (user : string) (full : string) (short : string) :
+    string =
   let sql =
     Printf.sprintf
       "INSERT INTO urls (username, full_url, shortened) VALUES ('%s', '%s', \
        '%s');"
-      user full_url shortened
+      user full short
   in
-  match execute_sql sql with None -> None | Some _ -> Some shortened
+  match execute_sql sql with
+  | None ->
+      Yojson.Safe.to_string
+        (yojson_of_bool_response {data= false; code= 500})
+  | Some _ ->
+      Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
 let create_user (username : string) (password : string) : string =
   let sql =

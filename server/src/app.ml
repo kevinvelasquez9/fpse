@@ -4,6 +4,9 @@ type user_object = {username: string; password: string} [@@deriving yojson]
 
 type follow_object = {follower: string; followee: string} [@@deriving yojson]
 
+type full_url_object = {user: string; short: string; full: string}
+[@@deriving yojson]
+
 let headers = [("Access-Control-Allow-Origin", "*")]
 
 (* Welcome page. localhost:8080/ *)
@@ -91,6 +94,20 @@ let get_feed : Dream.route =
           let feed = Lib.get_feed name in
           Dream.json ~headers feed )
 
+(* Create a short url by posting a full_url object with user, short, full
+   localhost:8080/short/create *)
+let create_short : Dream.route =
+  Dream.post "/short/create" (fun req ->
+      let%lwt body = Dream.body req in
+      let full_url_object =
+        body |> Yojson.Safe.from_string |> full_url_object_of_yojson
+      in
+      let user = full_url_object.user in
+      let short = full_url_object.short in
+      let full = full_url_object.full in
+      let valid = Lib.create_shortened_url user full short in
+      Dream.json ~headers valid )
+
 let () =
   Dream.run
   @@ Dream.router
@@ -101,4 +118,5 @@ let () =
        ; validate_user
        ; follow
        ; unfollow
-       ; get_feed ]
+       ; get_feed
+       ; create_short ]
