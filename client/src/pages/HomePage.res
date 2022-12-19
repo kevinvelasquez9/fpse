@@ -104,9 +104,9 @@ let make = (~user: string, ~loggedIn: bool) => {
   <div className="grid grid-cols-1 sm:grid-cols-1 h-screen w-full">
     {!loggedIn ? 
       <div className="bg-gray-800 flex flex-col justify-center">
-        <button className=" text-2xl font-large dark:text-white" onClick={_ => RescriptReactRouter.push("/")}>
-          {React.string("Return to Sign In Page")}
-        </button>
+        <button className="text-2xl font-large dark:text-white w-full my-3 py-2 bg-cyan-600 shadow-lg rounded-lg" onClick={_ => RescriptReactRouter.push("/")}>
+            {React.string("Return to Sign In Page")}
+          </button>
       </div>   : 
       <>
         <div className="bg-gray-800 flex flex-col justify-around">

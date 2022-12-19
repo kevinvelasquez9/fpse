@@ -8,7 +8,7 @@ let make = (~loggedIn: bool) => {
   }
 
   let handleSearch = _ => {
-    RescriptReactRouter.push(`/user/${text}`)
+    RescriptReactRouter.replace(`/user/${text}`)
   }
 
   <div className="w-screen h-20 flex flex-row bg-gray-500 justify-between p-6">
