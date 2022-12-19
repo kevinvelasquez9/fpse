@@ -7,11 +7,12 @@ let make = () => {
 
   <div className="w-screen h-screen flex flex-row justify-center">
     <div className="w-frame h-full bg-white">
-      <Header />
+      <Header loggedIn/>
       {switch url.path {
       | list{} => <SignInPage setUser setLoggedIn/>
       | list{"home"} => <HomePage user loggedIn/>
-      | list{"redirect", short} => <Redirect short/>
+      | list{"redirect", short} => <Redirect short loggedIn/>
+      | list{"user", friend} => <UserPage friend user loggedIn/>
       | _ => <ErrorPage/>
       }}
     </div>
