@@ -1,8 +1,6 @@
 open Core
 open Sqlite3
 
-[@@@warning "-27"]
-
 type str_response = {data: string; code: int} [@@deriving yojson]
 
 type list_response = {data: string list; code: int} [@@deriving yojson]
@@ -109,8 +107,7 @@ let get_full_url (shortened : string) : string =
     Yojson.Safe.to_string (yojson_of_str_response {data= ""; code= 500})
   in
   let sql =
-    Printf.sprintf "SELECT full_url FROM urls WHERE shortened = '%s';"
-      shortened
+    Printf.sprintf "SELECT full FROM urls WHERE short = '%s';" shortened
   in
   match execute_sql sql with
   | None -> bad_response
@@ -127,7 +124,7 @@ let get_full_url (shortened : string) : string =
 let get_feed (user : string) : string =
   let sql =
     Printf.sprintf
-      "SELECT username, shortened FROM urls INNER JOIN following ON \
+      "SELECT username, short FROM urls INNER JOIN following ON \
        urls.username = following.followee WHERE follower = '%s';"
       user
   in
