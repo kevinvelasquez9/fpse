@@ -57,6 +57,15 @@ let validate_user : Dream.route =
       let valid = Lib.validate_user username password in
       Dream.json ~headers valid )
 
+(* Check if user exists localhost:8080/user/exists?name=user1 *)
+let user_exists : Dream.route =
+  Dream.get "/user/exists" (fun req ->
+      match Dream.query req "name" with
+      | None -> Dream.json ~status:`Bad_Request ~headers ""
+      | Some name ->
+          let valid = Lib.user_exists name in
+          Dream.json ~headers valid )
+
 (* Follow a user by posting an object with follower and followee
    localhost:8080/follow *)
 let follow : Dream.route =
@@ -131,4 +140,5 @@ let () =
        ; unfollow
        ; get_feed
        ; create_short
-       ; is_following ]
+       ; is_following
+       ; user_exists ]

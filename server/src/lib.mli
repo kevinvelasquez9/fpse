@@ -39,3 +39,6 @@ val validate_user : string -> string -> string
 
 (* Check if a user is following someone else *)
 val is_following : string -> string -> string
+
+(* Check if user exists *)
+val user_exists : string -> string
