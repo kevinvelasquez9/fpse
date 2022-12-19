@@ -2,3 +2,4 @@ client/node_modules/
 client/lib/
 server/_build/
 client/**/*.bs.js
+server/database.db
