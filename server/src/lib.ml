@@ -68,7 +68,7 @@ let follow (follower : string) (followee : string) : string =
   match execute_sql sql with
   | None ->
       Yojson.Safe.to_string
-        (yojson_of_bool_response {data= false; code= 500})
+        (yojson_of_bool_response {data= false; code= 200})
   | Some _ ->
       Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
@@ -104,7 +104,7 @@ let get_all_shortened (user : string) : string =
 
 let get_full_url (shortened : string) : string =
   let bad_response =
-    Yojson.Safe.to_string (yojson_of_str_response {data= ""; code= 500})
+    Yojson.Safe.to_string (yojson_of_str_response {data= ""; code= 404})
   in
   let sql =
     Printf.sprintf "SELECT full FROM urls WHERE short = '%s';" shortened
@@ -156,7 +156,7 @@ let create_shortened_url (user : string) (full : string) (short : string) :
   match execute_sql sql with
   | None ->
       Yojson.Safe.to_string
-        (yojson_of_bool_response {data= false; code= 500})
+        (yojson_of_bool_response {data= false; code= 200})
   | Some _ ->
       Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
@@ -169,13 +169,13 @@ let create_user (username : string) (password : string) : string =
   match execute_sql sql with
   | None ->
       Yojson.Safe.to_string
-        (yojson_of_bool_response {data= false; code= 500})
+        (yojson_of_bool_response {data= false; code= 200})
   | Some _ ->
       Yojson.Safe.to_string (yojson_of_bool_response {data= true; code= 200})
 
 let validate_user (username : string) (password : string) : string =
   let not_valid_response =
-    Yojson.Safe.to_string (yojson_of_bool_response {data= false; code= 500})
+    Yojson.Safe.to_string (yojson_of_bool_response {data= false; code= 200})
   in
   let sql =
     Printf.sprintf

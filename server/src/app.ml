@@ -1,5 +1,3 @@
-[@@@warning "-27"]
-
 type user_object = {username: string; password: string} [@@deriving yojson]
 
 type follow_object = {follower: string; followee: string} [@@deriving yojson]
