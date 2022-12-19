@@ -101,7 +101,7 @@ let get_feed : Dream.route =
           let feed = Lib.get_feed name in
           Dream.json ~headers feed )
 
-(* Create a short url by posting a full_url object with user, short, full
+(* Create a short url by posting a full_url object with user, full, short
    localhost:8080/short/create *)
 let create_short : Dream.route =
   Dream.post "/short/create" (fun req ->
