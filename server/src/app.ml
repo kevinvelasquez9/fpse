@@ -106,6 +106,19 @@ let create_short : Dream.route =
       let valid = Lib.create_shortened_url user full short in
       Dream.json ~headers valid )
 
+(* Check if a user is following someone else by posting object with follower
+   and followee localhost:8080/isfollowing*)
+let is_following : Dream.route =
+  Dream.post "/isfollowing" (fun req ->
+      let%lwt body = Dream.body req in
+      let follow_object =
+        body |> Yojson.Safe.from_string |> follow_object_of_yojson
+      in
+      let follower = follow_object.follower in
+      let followee = follow_object.followee in
+      let valid = Lib.is_following follower followee in
+      Dream.json ~headers valid )
+
 let () =
   Dream.run
   @@ Dream.router
@@ -117,4 +130,5 @@ let () =
        ; follow
        ; unfollow
        ; get_feed
-       ; create_short ]
+       ; create_short
+       ; is_following ]

@@ -36,3 +36,6 @@ val create_user : string -> string -> string
 
 (* Validate a user, return false if username is taken *)
 val validate_user : string -> string -> string
+
+(* Check if a user is following someone else *)
+val is_following : string -> string -> string

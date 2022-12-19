@@ -179,13 +179,30 @@ let validate_user (username : string) (password : string) : string =
   in
   let sql =
     Printf.sprintf
-      "SELECT * FROM users WHERE username = '%s' AND password = '%s'"
+      "SELECT * FROM users WHERE username = '%s' AND password = '%s';"
       username password
   in
   match execute_sql sql with
   | None -> not_valid_response
   | Some rows ->
       if List.length rows = 0 then not_valid_response
+      else
+        Yojson.Safe.to_string
+          (yojson_of_bool_response {data= true; code= 200})
+
+let is_following (follower : string) (followee : string) : string =
+  let no_response =
+    Yojson.Safe.to_string (yojson_of_bool_response {data= false; code= 200})
+  in
+  let sql =
+    Printf.sprintf
+      "SELECT * FROM following WHERE follower = '%s' AND followee = '%s';"
+      follower followee
+  in
+  match execute_sql sql with
+  | None -> no_response
+  | Some rows ->
+      if List.length rows = 0 then no_response
       else
         Yojson.Safe.to_string
           (yojson_of_bool_response {data= true; code= 200})
