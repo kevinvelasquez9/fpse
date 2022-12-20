@@ -6,7 +6,7 @@ URL Shortener is a full-stack web app that allows users to create shortened URLs
 
 ## How to Run
 
-After cloning the project, go to the client folder and run `npm install` to install any dependencies. Then go to the server folder and run `opam install .` to install dune dependencies. From the client folder of the project, run `npm run start`, which builds the rescript project. Again from the client folder, run `npm run serve`, which runs the vite server. Now from the server folder, run `dune exec ./src/app.exe`. Now the webpage can be viewed from `http://localhost:3000/`. In order to run the tests, from the server folder, run `dune exec ./src/test.exe`.
+After cloning the project, go to the client folder and run `npm install` to install any dependencies. Then go to the server folder and run dune build, as well as `opam install .` to install dune dependencies. From the client folder of the project, run `npm run start`, which builds the rescript project. Again from the client folder, run `npm run serve`, which runs the vite server. Now from the server folder, run `dune exec ./src/app.exe`. Now the webpage can be viewed from `http://localhost:3000/`. In order to run the tests, from the server folder, run `dune exec ./src/test.exe`. 
 
 Team members:
 
