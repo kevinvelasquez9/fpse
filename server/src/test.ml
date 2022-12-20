@@ -46,6 +46,7 @@ let test_feed (username : string) : int =
   in
   List.length res.data
 
+<<<<<<< HEAD
 let test_unfollow_user (follower : string) (followee : string) : bool =
   let res =
     bool_response_of_yojson
@@ -78,3 +79,6 @@ let () =
   (* if user1 unfollows user2, then user1's feed should be empty *)
   assert_equal true (test_unfollow_user "user1" "user2") ;
   assert_equal 0 (test_feed "user1")
+=======
+(* let () = Unix.sleep 2 ; run_test_tt_main series *)
+>>>>>>> 8f79367781641614efe0e5a86524eece42636561

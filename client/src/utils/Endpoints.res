@@ -145,7 +145,7 @@ module GetFeedList = {
 
    let params = {
     "method": "GET",
-  }
+   }
 
   @val
   external fetch: (string, 'params) => Promise.t<Response.t<res>> = "fetch"
@@ -189,7 +189,41 @@ module FollowOrUnfollow = {
     ->then(data =>
       switch data.code {
       | 200 => Ok(data.data)
-      | _ => Error("URL Not Found")
+      | _ => Error("User Not Found")
+      }->resolve
+    )
+    ->catch(e => {
+      let msg = switch e {
+      | JsError(err) =>
+        switch Js.Exn.message(err) {
+        | Some(msg) => msg
+        | None => ""
+        }
+      | _ => "Unexpected error occurred"
+      }
+      Error(msg)->resolve
+    })
+  }
+}
+
+module CheckUserExists = {
+  type res = response<bool>
+
+  let params = {
+    "method": "GET",
+  }
+
+  @val
+  external fetch: (string, 'params) => Promise.t<Response.t<res>> = "fetch"
+
+  let get = (url: string) => {
+    open Promise
+    fetch(url, params)
+    ->then(res => Response.json(res))
+    ->then(data =>
+      switch data.code {
+      | 200 => Ok(data.data)
+      | _ => Error("User Not Found")
       }->resolve
     )
     ->catch(e => {
