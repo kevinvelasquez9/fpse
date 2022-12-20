@@ -15,7 +15,7 @@ let test_create_user _ =
     Lib.create_user "user1" "pw1"
     |> Yojson.Safe.from_string |> bool_response_of_yojson
   in
-  assert_equal 400 res.code
+  assert_equal res.code 200
 
 let table_tests =
   "Table Tests"
@@ -23,8 +23,6 @@ let table_tests =
 
 let user_tests = "User Tests" >: test_list ["create" >:: test_create_user]
 
-let series = "Server Tests" >::: [user_tests]
+let series = "Server Tests" >::: [table_tests; user_tests]
 
-let () = Lib.drop_tables () ; Lib.init_tables ()
-
-(* let () = Unix.sleep 2 ; run_test_tt_main series *)
+let () = Lib.drop_tables () ; Lib.init_tables () ; run_test_tt_main series

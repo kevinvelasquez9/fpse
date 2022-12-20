@@ -110,6 +110,7 @@ let make = (~user: string, ~loggedIn: bool) => {
       </div>   : 
       <>
         <div className="bg-gray-800 flex flex-col justify-around">
+          <h2 className="text-4xl dark:text-white font-bold text-center"> {React.string(user)} </h2>
           <div className="max-w-[400px] w-full mx-auto bg-gray-900 p-8 px-8 rounded-lg">
             <div className="flex flex-col dark:text-white  py-2">
               <label>{React.string("Input Full URL")}</label>
@@ -139,20 +140,3 @@ let make = (~user: string, ~loggedIn: bool) => {
     }  
   </div>
 }
-
-// <div className="bg-gray-800 flex flex-row">
-//           <div className="bg-gray-800 flex justify-around flex-col">
-//             <input type_="text" placeholder="Input Full URL" value={fullUrl} onChange={handleFullUrlChange}/>
-//             <input type_="text" placeholder="Input Short URL" value={shortUrl} onChange={handleShortUrlChange}/>
-//           </div>
-//           <button className="bg-gray-400" onClick={createShortenedURL}>
-//             {React.string("Create Tiny URL")}
-//           </button>
-//         </div>
-//         <div className="bg-gray-800">
-//           {React.string(errorMsg)}
-//         </div>
-//         <div className="bg-gray-800 items-center flex flex-row justify-evenly p-20">
-//           <UrlList list />
-//           <FeedList feed />
-//         </div>

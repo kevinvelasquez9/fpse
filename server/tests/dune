@@ -1,0 +1,5 @@
+(test
+ (name tests)
+ (libraries lib core ounit2 yojson)
+ (preprocess
+   (pps lwt_ppx ppx_yojson_conv)))
