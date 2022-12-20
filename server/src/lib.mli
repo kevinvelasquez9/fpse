@@ -25,9 +25,6 @@ val get_full_url : string -> string
 (* Get a user's feed (URLs made by their following) *)
 val get_feed : string -> string
 
-(* Create a random short id *)
-val create_random_short : unit -> string
-
 (* Create a shortened URL in the database *)
 val create_shortened_url : string -> string -> string -> string
 

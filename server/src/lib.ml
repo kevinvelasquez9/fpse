@@ -144,8 +144,6 @@ let get_feed (user : string) : string =
       in
       json
 
-let create_random_short () : string = "foo"
-
 let create_shortened_url (user : string) (full : string) (short : string) :
     string =
   let sql =
